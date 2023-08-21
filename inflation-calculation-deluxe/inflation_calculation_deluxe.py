@@ -7,6 +7,7 @@ from dash.dependencies import Input, Output, State, ALL
 import plotly.express as px
 import plotly.graph_objects as go
 import json
+import os
 
 #Transforms web tables into the proper format for the viz
 def make_usable(df):
@@ -59,6 +60,12 @@ ei.columns=ei.iloc[0]
 ei=ei[1:]
 ei=make_usable(ei)
 
+#grocery inflation
+gi=pd.read_html('https://www.usinflationcalculator.com/inflation/average-prices-for-selected-grocery-store-items-2015-present/')[0]
+gi.columns=gi.iloc[0]
+gi=gi[1:]
+gi=make_usable(gi)
+
 #College inflation (tricky sonofa)
 co=pd.read_html('https://www.usinflationcalculator.com/inflation/college-tuition-inflation-in-the-united-states/')[0]
 co.columns=co.iloc[0]
@@ -86,12 +93,6 @@ ga=ga[1:]
 ga.columns=ga.columns.str.capitalize()
 ga=make_usable(ga)
 
-#healthcare inflation
-hi=pd.read_html('https://www.usinflationcalculator.com/inflation/health-care-inflation-in-the-united-states/')[0]
-hi.columns=hi.iloc[0]
-hi=hi[1:]
-hi=make_usable(hi)
-
 #Used to determine the compounded inflation rate for a specified time span.
 def calculate_yoy(row, years, df_ref):
     
@@ -115,12 +116,13 @@ def calculate_yoy(row, years, df_ref):
 #Dash app
 app = dash.Dash(__name__)
 
-#All dates and all years that can be displayed
-unique_dates = sorted(df.index.unique())
-unique_years = sorted(set(date.year for date in unique_dates))
-
 #Used to input desired cumulative interest rate
 input_box = dcc.Input(id='input-box', type='number', placeholder='Years of Inflation', n_blur=0)
+
+#All dates and all years that can be displayed
+unique_dates = sorted(mi.index.unique())
+unique_years = sorted(set(date.year for date in unique_dates))
+
 
 #Eliminates all added cumulative rates
 reset_button = html.Button('Reset', id='reset-button')
@@ -209,6 +211,9 @@ storage = dcc.Store(id='storage', data=[1])
 #Stores lines visible (not made hidden by clicking the legend item
 visibility_store = dcc.Store(id='visibility-store', data={})
 
+#Tracks whether or not the start year in the year range was modified
+modified_start_year_store = dcc.Store(id='modified-start-year-store', data={'modified': False})
+
 # Arranges the components of the app
 app.layout = html.Div([control_center, html.Div([
         # The graph nested in a loading animation section
@@ -272,9 +277,6 @@ def update_storage(submit_n_clicks, reset_n_clicks, input_value, data):
     
     return data
 
-#Tracks whether or not the start year in the year range was modified
-modified_start_year_store = dcc.Store(id='modified-start-year-store', data={'modified': False})
-
 @app.callback(
     Output('modified-start-year-store', 'data'),
     [Input('start-year-input', 'n_blur')],
@@ -324,7 +326,7 @@ def combined_update(start_year, end_year, data_source, data, legend_button_click
 
     # Based on the dropdown value, select the data source
     df = data_sources[data_source]
-    
+
     # Ensure necessary columns exist in the new data source
     for years in data:
         if years != 1 and '{} Year'.format(years) not in df.columns:
@@ -430,5 +432,5 @@ def update_custom_legend(visibility_data, current_fig):
 
 # Run the app
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8050)))
     
