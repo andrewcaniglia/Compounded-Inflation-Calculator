@@ -179,7 +179,7 @@ control_center = html.Div([
         html.Div([  # This Div holds the year inputs
             html.Div([
                 html.Label('Range  ', style={'fontWeight': 'bold'}),
-                start_year_input,
+                start_year_input, html.Label('  -  ', style={'fontWeight': 'bold'}),
                 end_year_input
             ], style={'marginRight': '1px'}),
         ], style={'display': 'flex', 'gap': '0px', 'marginBottom': '10px'}),
