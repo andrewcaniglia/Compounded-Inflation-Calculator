@@ -155,7 +155,7 @@ data_source_dropdown = dcc.Dropdown(
     style={'width': '200px',
           'fontFamily': 'Arial, sans-serif',
                 'borderRadius': '5px'},
-    clearable=False
+                clearable=False
 )
 
 #Divs for data source dropdown, input box, submit button, reset button, and year range.
@@ -179,12 +179,9 @@ control_center = html.Div([
         html.Div([  # This Div holds the year inputs
             html.Div([
                 html.Label('Range  ', style={'fontWeight': 'bold'}),
-                start_year_input
-            ], style={'marginRight': '1px'}),
-            html.Div([
-                
+                start_year_input,
                 end_year_input
-            ])
+            ], style={'marginRight': '1px'}),
         ], style={'display': 'flex', 'gap': '0px', 'marginBottom': '10px'}),
 
         html.Div([  # This Div holds the YoY label and input
