@@ -154,7 +154,8 @@ data_source_dropdown = dcc.Dropdown(
     value='Headline CPI' ,# default value
     style={'width': '200px',
           'fontFamily': 'Arial, sans-serif',
-                'borderRadius': '5px'}
+                'borderRadius': '5px'},
+    clearable=False
 )
 
 #Divs for data source dropdown, input box, submit button, reset button, and year range.
