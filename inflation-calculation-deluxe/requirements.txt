@@ -3,3 +3,4 @@ dash==2.11.1
 numpy==1.21.6
 plotly==5.15.0
 lxml==4.7.1
+gunicorn==21.2.0
