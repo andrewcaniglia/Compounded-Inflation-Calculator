@@ -63,6 +63,7 @@ def get_distinct_colors(n, start_hue=240):
 
 #Dash app
 app = dash.Dash(__name__)
+server = app.server
 
 #Used to input desired cumulative interest rate
 input_box = dcc.Input(id='input-box', type='number', placeholder='Years of Inflation', n_blur=0)
