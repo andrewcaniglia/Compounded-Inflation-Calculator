@@ -10,6 +10,8 @@ from plotly.graph_objs import Figure
 from math import fmod
 import json
 import os
+import csv
+import urllib.parse
 from load_tables import get_processed_data
 
 processed_data_list=get_processed_data()
@@ -64,6 +66,10 @@ app = dash.Dash(__name__)
 
 #Used to input desired cumulative interest rate
 input_box = dcc.Input(id='input-box', type='number', placeholder='Years of Inflation', n_blur=0)
+
+#Downloads currently visible data
+download_link= html.A('Download CSV', id='download-link', download="data.csv", href="", target="_blank")
+
 
 #All dates and all years that can be displayed
 unique_dates = sorted(mi.index.unique())
@@ -184,6 +190,7 @@ app.layout = html.Div([control_center, html.Div([
         })
     ],
     style={'position': 'relative'}),
+    download_link,
     #Storage items aren't displayed explicitly
     modified_start_year_store,
     visibility_store, storage]
@@ -317,6 +324,7 @@ def combined_update(start_year, end_year, data_source, data, legend_button_click
 
         if existing_trace_index is not None:
             current_fig['data'][existing_trace_index]['y'] = y_values
+            current_fig['data'][existing_trace_index]['x'] = df_filtered.index
         else:
             # Add a new line if it doesn't already exist
             new_trace = go.Scatter(
@@ -327,7 +335,7 @@ def combined_update(start_year, end_year, data_source, data, legend_button_click
                 line=dict(color=color)  # Replace 'blue' with the color you want
             )
             current_fig.add_trace(new_trace)
-    
+
     # Apply stored visibility data
     if visibility_data:
         for trace in current_fig['data']:
@@ -383,6 +391,29 @@ def update_custom_legend(visibility_data, current_fig):
             ])
         )
     return legend_children
+
+@app.callback(
+    Output('download-link', 'href'),
+    [Input('start-year-input', 'value'),
+     Input('end-year-input', 'value'),
+     Input('data-source-dropdown', 'value'),
+     Input('plot', 'figure')]
+)
+def update_download_link(start_year, end_year, data_source, current_fig):
+    # Filter the dataframe based on the year range and data source
+    df_filtered = data_sources[data_source][(data_sources[data_source].index.year >= start_year) & (data_sources[data_source].index.year <= end_year)]
+
+    # Filter the dataframe based on the visible traces
+    visible_traces = [trace['name'] for trace in current_fig['data'] if getattr(trace, 'visible', True) == True]
+    df_filtered = df_filtered[visible_traces]
+
+    # Convert the DataFrame to a CSV string
+    csv_string = df_filtered.to_csv(index=True, encoding='utf-8')
+    
+    # Create a data URI
+    csv_data_uri = f"data:text/csv;charset=utf-8,{urllib.parse.quote(csv_string)}"
+    
+    return csv_data_uri
 
 # Run the app
 if __name__ == '__main__':
