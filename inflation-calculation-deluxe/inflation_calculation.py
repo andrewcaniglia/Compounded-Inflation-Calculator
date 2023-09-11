@@ -6,6 +6,8 @@ from dash import html
 from dash.dependencies import Input, Output, State, ALL
 import plotly.express as px
 import plotly.graph_objects as go
+from plotly.graph_objs import Figure
+from math import fmod
 import json
 import os
 from load_tables import get_processed_data
@@ -48,6 +50,14 @@ def vectorized_calculate_yoy(df_ref, years):
     result[f'Compounded_YoY_{years}'] = result[f'Compounded_YoY_{years}'].astype(float)
 
     return result
+
+def get_distinct_colors(n, start_hue=240):
+    golden_angle = 137.5
+    colors = []
+    for i in range(n):
+        hue = fmod(i * golden_angle + start_hue, 360)
+        colors.append(f'hsl({int(hue)}, 50%, 50%)')
+    return colors
 
 #Dash app
 app = dash.Dash(__name__)
@@ -269,8 +279,8 @@ def combined_update(start_year, end_year, data_source, data, legend_button_click
     
     ctx = dash.callback_context
 
-    if current_fig is None:
-        current_fig = go.Figure()
+    if current_fig is None or not isinstance(current_fig, Figure):
+        current_fig = go.Figure(current_fig)
 
     # Check if the callback was triggered by a legend button
     if "legend-button" in ctx.triggered[0]['prop_id']:
@@ -280,7 +290,7 @@ def combined_update(start_year, end_year, data_source, data, legend_button_click
         # Toggle trace visibility
         for trace in current_fig['data']:
             if trace['name'] == trace_name:
-                current_visibility = trace.get('visible', True)  # Get the current visibility or default to True if not set
+                current_visibility = trace.visible or True  # Get the current visibility or default to True if not set
                 trace['visible'] = 'legendonly' if current_visibility == True else True
 
                 # Update the visibility data
@@ -293,27 +303,39 @@ def combined_update(start_year, end_year, data_source, data, legend_button_click
     df_filtered = df[(df.index.year >= start_year) & (df
                                                       .index.year <= end_year)]
 
-    # Filter the dataframe to include only the relevant 'Inflation Change' columns
-    columns_to_include = ['{} Year'.format(year) for year in data]
-    df_plot = df_filtered[columns_to_include]
-    
-    # Create the line chart
-    fig = px.line(df_plot, title='Multi-Year Inflation Rate', labels={'value': 'Inflation Rate', 'index': 'Date', 'variable': 'Years'}
-                 )
+    # Generate colors
+    colors = get_distinct_colors(len(data))
 
-    for trace in fig.data:
-        trace_name = trace['name']
-        if trace_name in visibility_data:
-            trace['visible'] = visibility_data[trace_name]
+    # Update or add lines for each year in data
+    for idx, year in enumerate(data):
+        column_name = '{} Year'.format(year)
+        y_values = df_filtered[column_name]
+
+        color=colors[idx]
+
+        existing_trace_index = next((i for i, trace in enumerate(current_fig['data']) if trace['name'] == column_name), None)
+
+        if existing_trace_index is not None:
+            current_fig['data'][existing_trace_index]['y'] = y_values
+        else:
+            # Add a new line if it doesn't already exist
+            new_trace = go.Scatter(
+                x=df_filtered.index,
+                y=y_values,
+                mode='lines',
+                name=column_name,
+                line=dict(color=color)  # Replace 'blue' with the color you want
+            )
+            current_fig.add_trace(new_trace)
     
     # Apply stored visibility data
     if visibility_data:
-        for trace in fig.data:
-            trace_name = '{} Year'.format(trace.name)
+        for trace in current_fig['data']:
+            trace_name = '{} Year'.format(trace['name'])
             if trace_name in visibility_data:
                 trace['visible'] = visibility_data[trace_name]
 
-    fig.update_layout(
+    current_fig.update_layout(
     title_text="Multi-Year Inflation Rate",
     title_font=dict(family="Courier New, monospace", size=24, color="RebeccaPurple"),
     xaxis=dict(title_text="Year", title_font=dict(family="Arial, sans-serif", size=18, color="Grey")),
@@ -325,11 +347,11 @@ def combined_update(start_year, end_year, data_source, data, legend_button_click
         plot_bgcolor='#f8f8f8',
         paper_bgcolor='#f8f8f8'
     )
-    fig.update_yaxes(zerolinecolor='black')
+    current_fig.update_yaxes(zerolinecolor='black')
     
-    fig.update_layout(showlegend=False)
+    current_fig.update_layout(showlegend=False)
 
-    return [fig, visibility_data]  # Return the new figure and the unchanged visibility data
+    return [current_fig, visibility_data]  # Return the new figure and the unchanged visibility data
 
 @app.callback(
     Output('custom-legend', 'children'),
