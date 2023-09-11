@@ -1,6 +1,0 @@
-pandas==1.4.0
-dash==2.11.1
-numpy==1.22.1
-plotly==5.15.0
-lxml==4.7.1
-
