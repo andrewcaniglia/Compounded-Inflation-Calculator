@@ -63,13 +63,26 @@ def get_distinct_colors(n, start_hue=240):
 
 #Dash app
 app = dash.Dash(__name__)
-server = app.server
+server=app.server
+app.title = "Inflation Calculation"
 
 #Used to input desired cumulative interest rate
 input_box = dcc.Input(id='input-box', type='number', placeholder='Years of Inflation', n_blur=0)
 
 #Downloads currently visible data
-download_link= html.A('Download CSV', id='download-link', download="data.csv", href="", target="_blank")
+download_link= html.A('Download CSV',
+    id='download-link',
+    download="data.csv",
+    href="",
+    target="_blank",
+    style={
+        'backgroundColor': 'White',
+        'color': 'Grey',
+        'padding': '6px 10px',
+        'border': 'none',
+        'borderRadius': '4px',
+        'cursor': 'pointer',
+    })
 
 
 #All dates and all years that can be displayed
@@ -157,7 +170,7 @@ control_center = html.Div([
 plot = dcc.Graph(id='plot')
 
 #Stores lines displayed
-storage = dcc.Store(id='storage', data=[1])
+storage = dcc.Store(id='storage', data={'reset': False, 'data': [1]})
 
 #Stores lines visible (not made hidden by clicking the legend item
 visibility_store = dcc.Store(id='visibility-store', data={})
@@ -205,16 +218,24 @@ app.layout = html.Div([control_center, html.Div([
     [State('input-box', 'value'),
      State('storage', 'data')]
 )
-def update_storage(submit_n_clicks, reset_n_clicks, input_value, data):
+def update_storage(submit_n_clicks, reset_n_clicks, input_value, storage_data):
+    print(f"update_storage: storage_data type = {type(storage_data)}, value = {storage_data}")
+    # ... rest of your code
     ctx = dash.callback_context
     if not ctx.triggered:
         raise dash.exceptions.PreventUpdate
     else:
         button_id = ctx.triggered[0]['prop_id'].split('.')[0]
 
+    # Initialize storage_data if it's None or not a dict
+    if storage_data is None or not isinstance(storage_data, dict):
+        storage_data = {'reset': False, 'data': []}
+
+    data = storage_data.get('data', [])
+
     # Reset button causes only the 1 year inflation rate to be displayed
     if button_id == 'reset-button':
-        return [1]
+        return {'reset': True, 'data': [1]}  # Include a reset flag
 
     # If no value is input, do nothing
     if not input_value:
@@ -227,7 +248,7 @@ def update_storage(submit_n_clicks, reset_n_clicks, input_value, data):
     if input_value not in data:
         data.append(input_value)
     
-    return data
+    return {'reset': False, 'data': data}
 
 @app.callback(
     Output('modified-start-year-store', 'data'),
@@ -274,7 +295,12 @@ def adjust_start_year(data_source, current_start_year, modified_data):
     [State('visibility-store', 'data'),
      State('plot', 'figure')]
 )
-def combined_update(start_year, end_year, data_source, data, legend_button_clicks, visibility_data, current_fig):
+def combined_update(start_year, end_year, data_source, storage_data, legend_button_clicks, visibility_data, current_fig):
+
+    print(f"update_storage: storage_data type = {type(storage_data)}, value = {storage_data}")
+    # ... rest of your code
+    # Extract the 'data' list from storage_data
+    data = storage_data.get('data', [])
 
     # Based on the dropdown value, select the data source
     df = data_sources[data_source]
@@ -344,6 +370,18 @@ def combined_update(start_year, end_year, data_source, data, legend_button_click
             if trace_name in visibility_data:
                 trace['visible'] = visibility_data[trace_name]
 
+    # Check for reset
+    if storage_data.get('reset', False):
+        traces_to_keep= ['1 Year']
+        current_fig['data'] = [trace for trace in current_fig['data'] if trace['name'] in traces_to_keep]
+        # Set all to visible
+        for trace in current_fig['data']:
+            trace['visible'] = True
+        visibility_data = {}  # Reset visibility_data
+
+        # Reset the data to 1-year inflation rate only
+        storage_data['data'] = [1]
+
     current_fig.update_layout(
     title_text="Multi-Year Inflation Rate",
     title_font=dict(family="Courier New, monospace", size=24, color="RebeccaPurple"),
@@ -359,7 +397,7 @@ def combined_update(start_year, end_year, data_source, data, legend_button_click
     current_fig.update_yaxes(zerolinecolor='black')
     
     current_fig.update_layout(showlegend=False)
-
+    print(f"update_storage: storage_data type = {type(storage_data)}, value = {current_fig}")
     return [current_fig, visibility_data]  # Return the new figure and the unchanged visibility data
 
 @app.callback(
@@ -405,7 +443,10 @@ def update_download_link(start_year, end_year, data_source, current_fig):
     df_filtered = data_sources[data_source][(data_sources[data_source].index.year >= start_year) & (data_sources[data_source].index.year <= end_year)]
 
     # Filter the dataframe based on the visible traces
-    visible_traces = [trace['name'] for trace in current_fig['data'] if getattr(trace, 'visible', True) == True]
+    if current_fig is not None and current_fig.get('data') is not None:
+        visible_traces = [trace['name'] for trace in current_fig['data'] if getattr(trace, 'visible', True) == True]
+    else:
+        visible_traces=['1 Year']
     df_filtered = df_filtered[visible_traces]
 
     # Convert the DataFrame to a CSV string
