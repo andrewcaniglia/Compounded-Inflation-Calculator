@@ -212,6 +212,11 @@ app.layout = html.Div([control_center, html.Div([
     html.Li("Years of Inflation: Enter the number of years over which you want to calculate compounded inflation rates. For example, entering '4' will show you how inflation has behaved over four-year periods."),
     html.Li("Add Line: Click 'Add Line' to visualize the compounded inflation rate based on your time frame."),
     html.Li("Reset: Click 'Reset' to revert to the default view, which shows only the one-year inflation rate."),
+    html.A([
+        "Source Code",
+        html.Img(src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png", style={'height': '20px', 'padding-bottom': '5px'})
+    ], href="https://github.com/andrewcaniglia/Compounded-Inflation-Calculator", target="_blank")
+])
     #Storage items aren't displayed explicitly
     modified_start_year_store,
     visibility_store, storage]
