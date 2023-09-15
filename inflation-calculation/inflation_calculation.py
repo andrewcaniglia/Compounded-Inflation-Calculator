@@ -67,7 +67,7 @@ server=app.server
 app.title = "Inflation Calculation"
 
 #Used to input desired cumulative interest rate
-input_box = dcc.Input(id='input-box', type='number', placeholder='Years of Inflation', n_blur=0)
+input_box = dcc.Input(id='input-box', type='number', placeholder='Input Time Frame', n_blur=0)
 
 #Downloads currently visible data
 download_link= html.A('Download CSV',
@@ -205,6 +205,13 @@ app.layout = html.Div([control_center, html.Div([
     ],
     style={'position': 'relative'}),
     download_link,
+    html.P("Calculate compounded inflation rates and graph them on a time-series chart."),
+    html.Li(["Select Data Source: Choose a category to focus on. All data is sourced from ",
+    html.A("U.S. Inflation Calculator.", href="https://www.usinflationcalculator.com/", target="_blank")]),
+    html.Li("Set Year Range: Define the span of years for which you want to view data."),
+    html.Li("Input Time Frame: Enter the number of years over which you want to calculate compounded inflation rates. For example, entering '4' will show you how inflation has behaved over four-year periods."),
+    html.Li("Add Line: Click 'Add Line' to visualize the compounded inflation rate based on your time frame."),
+    html.Li("Reset: Click 'Reset' to revert to the default view, which shows only the one-year inflation rate."),
     #Storage items aren't displayed explicitly
     modified_start_year_store,
     visibility_store, storage]
@@ -295,6 +302,8 @@ def adjust_start_year(data_source, current_start_year, modified_data):
      State('plot', 'figure')]
 )
 def combined_update(start_year, end_year, data_source, storage_data, legend_button_clicks, visibility_data, current_fig):
+
+    # ... rest of your code
     # Extract the 'data' list from storage_data
     data = storage_data.get('data', [])
 
@@ -379,7 +388,7 @@ def combined_update(start_year, end_year, data_source, storage_data, legend_butt
         storage_data['data'] = [1]
 
     current_fig.update_layout(
-    title_text="Multi-Year Inflation Rate",
+    title_text="Compounded Inflation Rate",
     title_font=dict(family="Courier New, monospace", size=24, color="RebeccaPurple"),
     xaxis=dict(title_text="Year", title_font=dict(family="Arial, sans-serif", size=18, color="Grey")),
     yaxis=dict(title_text="Inflation Rate", title_font=dict(family="Times New Roman, Times, serif", size=18, color="Grey")),
@@ -391,7 +400,6 @@ def combined_update(start_year, end_year, data_source, storage_data, legend_butt
         paper_bgcolor='#f8f8f8'
     )
     current_fig.update_yaxes(zerolinecolor='black')
-    
     current_fig.update_layout(showlegend=False)
     return [current_fig, visibility_data]  # Return the new figure and the unchanged visibility data
 
@@ -431,18 +439,30 @@ def update_custom_legend(visibility_data, current_fig):
     [Input('start-year-input', 'value'),
      Input('end-year-input', 'value'),
      Input('data-source-dropdown', 'value'),
-     Input('plot', 'figure')]
+     Input('plot', 'figure')],
+     [State('visibility-store', 'data')]
 )
-def update_download_link(start_year, end_year, data_source, current_fig):
+def update_download_link(start_year, end_year, data_source, current_fig, visibility_data):
     # Filter the dataframe based on the year range and data source
     df_filtered = data_sources[data_source][(data_sources[data_source].index.year >= start_year) & (data_sources[data_source].index.year <= end_year)]
 
-    # Filter the dataframe based on the visible traces
-    if current_fig is not None and current_fig.get('data') is not None:
-        visible_traces = [trace['name'] for trace in current_fig['data'] if getattr(trace, 'visible', True) == True]
+    # Start with all traces
+    all_traces = {trace['name'] for trace in current_fig['data']}
+    
+    # If visibility_data exists, consider only the traces that are not 'legendonly'
+    if visibility_data:
+        hidden_traces = {key for key, value in visibility_data.items() if value == 'legendonly'}
     else:
-        visible_traces=['1 Year']
-    df_filtered = df_filtered[visible_traces]
+        hidden_traces = set()
+        
+    # Calculate the set of visible traces
+    visible_traces = all_traces - hidden_traces
+
+    # Sort the visible traces by the numerical value of the year
+    visible_traces = sorted(visible_traces, key=lambda x: int(x.split(' ')[0]))
+
+    # Filter the dataframe to only include visible traces
+    df_filtered = df_filtered[list(visible_traces)].dropna(how='all')
 
     # Convert the DataFrame to a CSV string
     csv_string = df_filtered.to_csv(index=True, encoding='utf-8')
@@ -454,5 +474,5 @@ def update_download_link(start_year, end_year, data_source, current_fig):
 
 # Run the app
 if __name__ == '__main__':
-    app.run_server(host='0.0.0.0', port=int(os.environ.get('PORT', 8051)))
+    app.run_server(host='0.0.0.0', port=int(os.environ.get('PORT', 8000)))
     
