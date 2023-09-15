@@ -207,7 +207,7 @@ app.layout = dbc.Container([html.Div([control_center, html.Div([
     style={'position': 'relative'}),
     download_link,
     html.P("Calculate compounded inflation rates and graph them on a time-series chart. Move your cursor over the line to see its exact value at a given point in time."),
-    html.Li(["Select Data Source: Choose a category to focus on. All data is sourced from ",
+    html.Li(["Select Data Source: Choose a category to focus on. Note that data availability varies by category and starts from different years. All data is sourced from ",
     html.A("U.S. Inflation Calculator.", href="https://www.usinflationcalculator.com/", target="_blank")]),
     html.Li("Set Year Range: Define the span of years for which you want to view data."),
     html.Li("Input Time Frame: Enter the number of years over which you want to calculate compounded inflation rates. For example, entering '4' will show you how inflation has behaved over four-year periods. The values are the product of YoY inflation rates from one, two, and three years ago, multiplied by that month's YoY inflation rate."),
