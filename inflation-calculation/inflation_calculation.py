@@ -67,7 +67,7 @@ server=app.server
 app.title = "Inflation Calculation"
 
 #Used to input desired cumulative interest rate
-input_box = dcc.Input(id='input-box', type='number', placeholder='Input Time Frame', n_blur=0)
+input_box = dcc.Input(id='input-box', type='number', placeholder='Years of Inflation', n_blur=0)
 
 #Downloads currently visible data
 download_link= html.A('Download CSV',
@@ -209,7 +209,7 @@ app.layout = html.Div([control_center, html.Div([
     html.Li(["Select Data Source: Choose a category to focus on. All data is sourced from ",
     html.A("U.S. Inflation Calculator.", href="https://www.usinflationcalculator.com/", target="_blank")]),
     html.Li("Set Year Range: Define the span of years for which you want to view data."),
-    html.Li("Input Time Frame: Enter the number of years over which you want to calculate compounded inflation rates. For example, entering '4' will show you how inflation has behaved over four-year periods."),
+    html.Li("Years of Inflation: Enter the number of years over which you want to calculate compounded inflation rates. For example, entering '4' will show you how inflation has behaved over four-year periods."),
     html.Li("Add Line: Click 'Add Line' to visualize the compounded inflation rate based on your time frame."),
     html.Li("Reset: Click 'Reset' to revert to the default view, which shows only the one-year inflation rate."),
     #Storage items aren't displayed explicitly
