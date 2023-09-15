@@ -216,7 +216,7 @@ app.layout = html.Div([control_center, html.Div([
         "Source Code",
         html.Img(src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png", style={'height': '20px', 'padding-bottom': '5px'})
     ], href="https://github.com/andrewcaniglia/Compounded-Inflation-Calculator", target="_blank")
-])
+]),
     #Storage items aren't displayed explicitly
     modified_start_year_store,
     visibility_store, storage]
