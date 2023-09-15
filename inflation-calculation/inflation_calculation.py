@@ -219,7 +219,6 @@ app.layout = html.Div([control_center, html.Div([
      State('storage', 'data')]
 )
 def update_storage(submit_n_clicks, reset_n_clicks, input_value, storage_data):
-    print(f"update_storage: storage_data type = {type(storage_data)}, value = {storage_data}")
     # ... rest of your code
     ctx = dash.callback_context
     if not ctx.triggered:
@@ -296,9 +295,6 @@ def adjust_start_year(data_source, current_start_year, modified_data):
      State('plot', 'figure')]
 )
 def combined_update(start_year, end_year, data_source, storage_data, legend_button_clicks, visibility_data, current_fig):
-
-    print(f"update_storage: storage_data type = {type(storage_data)}, value = {storage_data}")
-    # ... rest of your code
     # Extract the 'data' list from storage_data
     data = storage_data.get('data', [])
 
@@ -397,7 +393,6 @@ def combined_update(start_year, end_year, data_source, storage_data, legend_butt
     current_fig.update_yaxes(zerolinecolor='black')
     
     current_fig.update_layout(showlegend=False)
-    print(f"update_storage: storage_data type = {type(storage_data)}, value = {current_fig}")
     return [current_fig, visibility_data]  # Return the new figure and the unchanged visibility data
 
 @app.callback(
