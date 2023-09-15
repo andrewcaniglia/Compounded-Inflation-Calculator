@@ -4,6 +4,7 @@ import numpy as np
 from dash import dcc
 from dash import html
 from dash.dependencies import Input, Output, State, ALL
+import dash_bootstrap_components as dbc
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.graph_objs import Figure
@@ -67,7 +68,7 @@ server=app.server
 app.title = "Inflation Calculation"
 
 #Used to input desired cumulative interest rate
-input_box = dcc.Input(id='input-box', type='number', placeholder='Years of Inflation', n_blur=0)
+input_box = dcc.Input(id='input-box', type='number', placeholder='Input Time Frame', n_blur=0)
 
 #Downloads currently visible data
 download_link= html.A('Download CSV',
@@ -167,7 +168,7 @@ control_center = html.Div([
 ], style={'display': 'flex', 'gap': '10px', 'flexDirection': 'row', 'marginBottom': '10px'})
 
 # Container for plot
-plot = dcc.Graph(id='plot')
+plot = dcc.Graph(id='plot', responsive=True)
 
 #Stores lines displayed
 storage = dcc.Store(id='storage', data={'reset': False, 'data': [1]})
@@ -179,7 +180,7 @@ visibility_store = dcc.Store(id='visibility-store', data={})
 modified_start_year_store = dcc.Store(id='modified-start-year-store', data={'modified': False})
 
 # Arranges the components of the app
-app.layout = html.Div([control_center, html.Div([
+app.layout = dbc.Container([html.Div([control_center, html.Div([
         # The graph nested in a loading animation section
         dcc.Loading(
             id="loading-plot",
@@ -205,22 +206,17 @@ app.layout = html.Div([control_center, html.Div([
     ],
     style={'position': 'relative'}),
     download_link,
-    html.P("Calculate compounded inflation rates and graph them on a time-series chart. Move your cursor on the line to see its exact value."),
+    html.P("Calculate compounded inflation rates and graph them on a time-series chart."),
     html.Li(["Select Data Source: Choose a category to focus on. All data is sourced from ",
     html.A("U.S. Inflation Calculator.", href="https://www.usinflationcalculator.com/", target="_blank")]),
     html.Li("Set Year Range: Define the span of years for which you want to view data."),
-    html.Li("Years of Inflation: Enter the number of years over which you want to calculate compounded inflation rates. For example, entering '4' will show you how inflation has behaved over four-year periods."),
-    html.Li("Add Line: Click 'Add Line' to visualize the compounded inflation rate based on your time frame."),
-    html.Li("Reset: Click 'Reset' to revert to the default view, which shows only the one-year inflation rate."),
-    html.A([
-        "Source Code",
-        html.Img(src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png", style={'height': '20px', 'padding-bottom': '5px'})
-    ], href="https://github.com/andrewcaniglia/Compounded-Inflation-Calculator", target="_blank")
-]),
+    html.Li("Input Time Frame: Enter the number of years over which you want to calculate compounded inflation rates. For example, entering '4' will show you how inflation has behaved over four-year periods. The values are the product of YoY inflation rates from one, two, and three years ago, multiplied by that month's YoY inflation rate."),
+    html.Li("Add Line: Click 'Add Line' to add the compounded inflation rate to the chart."),
+    html.Li("Reset: Click 'Reset' to eliminate all compounded inflation rates, leaving only the 1 year rate."),
     #Storage items aren't displayed explicitly
     modified_start_year_store,
     visibility_store, storage]
-    , style={'backgroundColor': 'white'})
+    , style={'backgroundColor': 'white'})], fluid=True)
 
 #Updates storage container based on input values and reset button
 @app.callback(
@@ -231,7 +227,6 @@ app.layout = html.Div([control_center, html.Div([
      State('storage', 'data')]
 )
 def update_storage(submit_n_clicks, reset_n_clicks, input_value, storage_data):
-    # ... rest of your code
     ctx = dash.callback_context
     if not ctx.triggered:
         raise dash.exceptions.PreventUpdate
@@ -479,5 +474,5 @@ def update_download_link(start_year, end_year, data_source, current_fig, visibil
 
 # Run the app
 if __name__ == '__main__':
-    app.run_server(host='0.0.0.0', port=int(os.environ.get('PORT', 8000)))
+    app.run_server(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8000)))
     
