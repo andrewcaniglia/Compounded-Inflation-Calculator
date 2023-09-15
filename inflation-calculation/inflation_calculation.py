@@ -205,7 +205,7 @@ app.layout = html.Div([control_center, html.Div([
     ],
     style={'position': 'relative'}),
     download_link,
-    html.P("Calculate compounded inflation rates and graph them on a time-series chart."),
+    html.P("Calculate compounded inflation rates and graph them on a time-series chart. Move your cursor on the line to see its exact value."),
     html.Li(["Select Data Source: Choose a category to focus on. All data is sourced from ",
     html.A("U.S. Inflation Calculator.", href="https://www.usinflationcalculator.com/", target="_blank")]),
     html.Li("Set Year Range: Define the span of years for which you want to view data."),
