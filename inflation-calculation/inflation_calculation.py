@@ -85,6 +85,46 @@ download_link= html.A('Download CSV',
         'cursor': 'pointer',
     })
 
+#Describes how to use the dashboard
+about_section = html.Div([
+    html.H4("How to Use This Dashboard"),
+    html.P("Easily calculate compounded inflation rates and visualize them on an interactive time-series chart. Hover over the graph lines to see precise values."),
+    
+    html.Ul([
+        html.Li([
+            html.I(className="fas fa-database"),  # Icon
+            " Data Source: ",
+            html.Span("Select a category to dive into. "),
+            html.Small("Note: Data starts from different years for each category. All data is sourced from "),
+            html.A("usinflationcalculator.com.", href="https://www.usinflationcalculator.com/", target="_blank")
+        ]),
+        
+        html.Li([
+            html.I(className="fas fa-calendar-alt"),  # Icon
+            " Year Range: ",
+            html.Span("Set the period you're interested in.")
+        ]),
+        
+        html.Li([
+            html.I(className="fas fa-clock"),  # Icon
+            " Time Frame: ",
+            html.Span("Input the number of years for compounded inflation. "),
+            html.Small("E.g., '4' calculates inflation over four-year periods.")
+        ]),
+        
+        html.Li([
+            html.I(className="fas fa-plus-circle"),  # Icon
+            " Add Line: ",
+            html.Span("Integrate the compounded inflation rate into the graph. This also adds an interactive legend item that hides the line when clicked.")
+        ]),
+        
+        html.Li([
+            html.I(className="fas fa-undo"),  # Icon
+            " Reset: ",
+            html.Span("Clear all, reverting to the 1-year rate.")
+        ])
+    ])
+])
 
 #All dates and all years that can be displayed
 unique_dates = sorted(mi.index.unique())
@@ -206,13 +246,11 @@ app.layout = dbc.Container([html.Div([control_center, html.Div([
     ],
     style={'position': 'relative'}),
     download_link,
-    html.P("Calculate compounded inflation rates and graph them on a time-series chart. Move your cursor over the line to find the exact value."),
-    html.Li(["Select Data Source: Choose a category to focus on. Data availability varies by category and starts from different years. All data is sourced from ",
-    html.A("U.S. Inflation Calculator.", href="https://www.usinflationcalculator.com/", target="_blank")]),
-    html.Li("Set Year Range: Define the span of years for which you want to view data."),
-    html.Li("Input Time Frame: Enter the number of years over which you want to calculate compounded inflation rates. For example, entering '4' will show you how inflation has behaved over four-year periods. The values are the product of YoY inflation rates from one, two, and three years before the month selected, multiplied by that month's YoY inflation rate."),
-    html.Li("Add Line: Click 'Add Line' to add the compounded inflation rate to the chart. This also adds a legend item for the line. Click the legend item to temporarily hide the line, and click it again to bring it back."),
-    html.Li("Reset: Click 'Reset' to eliminate all compounded inflation rates, leaving only the 1 year rate."),
+    about_section,
+    html.A([
+        "Source Code ",
+        html.Img(src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png", style={'height': '20px', 'padding-bottom': '5px'})
+    ], href="https://github.com/andrewcaniglia/Compounded-Inflation-Calculator", target="_blank"),
     #Storage items aren't displayed explicitly
     modified_start_year_store,
     visibility_store, storage]
