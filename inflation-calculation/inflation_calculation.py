@@ -474,5 +474,5 @@ def update_download_link(start_year, end_year, data_source, current_fig, visibil
 
 # Run the app
 if __name__ == '__main__':
-    app.run_server(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8000)))
+    app.run_server(host='0.0.0.0', port=int(os.environ.get('PORT', 8000)))
     
