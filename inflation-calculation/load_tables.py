@@ -59,6 +59,7 @@ def process_co(co):
     #Final fix
     co=co[~co['YoY'].astype('str').str.contains('Avail.')][['Date', 'YoY']]
     co['YoY']=[float(x) for x in co['YoY']]
+    co.rename(columns={'YoY':'1 Year'}, inplace=True)
     co.sort_values('Date', inplace=True, ignore_index=True)
     co.set_index('Date', inplace=True)
     return co
