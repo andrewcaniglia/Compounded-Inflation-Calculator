@@ -17,7 +17,7 @@ reset_button = html.Button('Reset', id='reset-button')
 submit_button = html.Button('Add Line', id='submit-button')
 
 #Stores lines displayed
-storage = dcc.Store(id='storage', data={'reset': False, 'data': [1]})
+storage = dcc.Store(id='storage', data={'reset': False, 'data': [1, 4]})
 
 #Stores lines visible (not made hidden by clicking the legend item)
 visibility_store = dcc.Store(id='visibility-store', data={})
@@ -45,11 +45,13 @@ download_link = html.A(
 #Describes how to use the dashboard
 about_section = html.Div(
     [
-        html.H4("How to Use This Dashboard"),
+        html.H4("About This Chart"),
         
         #Main description
         html.P(
-            "Easily calculate compounded inflation rates and visualize them on an interactive time-series chart. "
+            "Every month, the U.S. Labor Department's Buraeu of Labor Statistics releases the current year over year and month over month inflation rate. "
+            "However, these intervals do not convey how much prices have increased over time intervals that may be more relevant to the average consumer. "
+            "Calculate inflation rates over longer time frames and visualize them on this interactive time-series chart. "
             "Hover over the graph lines to see precise values."
         ),
         
@@ -60,7 +62,7 @@ about_section = html.Div(
                     [
                         html.I(className="fas fa-database"),  # Icon
                         " Category: ",
-                        html.Span("Select a category to dive into. "),
+                        html.Span("Select a category to view. "),
                         html.Small(
                             "Note: Data starts from different years for each category. "
                             "All data is sourced from the U.S. Labor Department’s Bureau of Labor Statistics."
