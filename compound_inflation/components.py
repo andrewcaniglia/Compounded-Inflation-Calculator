@@ -62,11 +62,15 @@ about_section = html.Div(
                     [
                         html.I(className="fas fa-database"),  # Icon
                         " Category: ",
-                        html.Span("Select a category to view. "
+                        html.Span("Select a category to view. "),
+                        html.Small(
                             "Note: Data starts from different years for each category. "
                             "All data is sourced from the U.S. Labor Department’s Bureau of Labor Statistics as reported by "
                         ),
-                        html.A('usinflationcalculator.com.', href='https://www.usinflationcalculator.com/inflation/consumer-price-index-and-annual-percent-changes-from-1913-to-2008/'
+                        html.A(
+                            'usinflationcalculator.com.', 
+                            href='https://www.usinflationcalculator.com/inflation/consumer-price-index-and-annual-percent-changes-from-1913-to-2008/',
+                            style={'font-size': 'smaller'}
                         )
                     ]
                 ),
