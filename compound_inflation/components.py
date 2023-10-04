@@ -68,7 +68,7 @@ about_section = html.Div(
                             "All data is sourced from the U.S. Labor Department’s Bureau of Labor Statistics as reported by "
                         ),
                         html.A(
-                            'usinflationcalculator.com.', 
+                            'usinflationcalculator.com.',
                             href='https://www.usinflationcalculator.com/inflation/consumer-price-index-and-annual-percent-changes-from-1913-to-2008/',
                             style={'font-size': 'smaller'}
                         )
@@ -88,10 +88,11 @@ about_section = html.Div(
                 html.Li(
                     [
                         html.I(className="fas fa-clock"),  # Icon
-                        " Time Frame: ",
-                        html.Span("Input the number of years with which to calculate compounded inflation. "
-                        "For example, "
-                        "input '5' to calculate the amount of inflation that took place over a 5 year time span."
+                        "Input Time Frame: ",
+                        html.Span("Input the number of years with which to calculate compounded inflation. "),
+                        html.Small(
+                            "For example, "
+                            "input '5' to calculate the amount of inflation that took place over a 5 year time span."
                         )
                     ]
                 ),
