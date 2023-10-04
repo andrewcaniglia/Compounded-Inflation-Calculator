@@ -65,7 +65,9 @@ about_section = html.Div(
                         html.Span("Select a category to view. "),
                         html.Small(
                             "Note: Data starts from different years for each category. "
-                            "All data is sourced from the U.S. Labor Department’s Bureau of Labor Statistics."
+                            "All data is sourced from the U.S. Labor Department’s Bureau of Labor Statistics as reported by "
+                        ),
+                        html.A('usinflationcalculator.com.', href='https://www.usinflationcalculator.com/inflation/consumer-price-index-and-annual-percent-changes-from-1913-to-2008/'
                         )
                     ]
                 ),
@@ -74,8 +76,8 @@ about_section = html.Div(
                 html.Li(
                     [
                         html.I(className="fas fa-calendar-alt"),  # Icon
-                        " Year Range: ",
-                        html.Span("Set the period you're interested in.")
+                        "Range: ",
+                        html.Span("Set the time period you're interested in.")
                     ]
                 ),
                 
@@ -84,8 +86,10 @@ about_section = html.Div(
                     [
                         html.I(className="fas fa-clock"),  # Icon
                         " Time Frame: ",
-                        html.Span("Input the number of years for compounded inflation. "),
-                        html.Small("E.g., '4' calculates inflation over four-year periods.")
+                        html.Span("Input the number of years with which to calculate compounded inflation. "
+                        "For example, "
+                        "input '5' to calculate the amount of inflation that took place over a 5 year time span."
+                        )
                     ]
                 ),
                 
@@ -106,7 +110,7 @@ about_section = html.Div(
                     [
                         html.I(className="fas fa-undo"),  # Icon
                         " Reset: ",
-                        html.Span("Clear all, reverting to the 1-year rate.")
+                        html.Span("Clears all lines except for the 1 Year inflation rate.")
                     ]
                 )
             ]
