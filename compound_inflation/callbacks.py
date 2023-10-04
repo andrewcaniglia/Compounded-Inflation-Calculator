@@ -181,7 +181,7 @@ def combined_update(start_year, end_year, data_source, storage_data, legend_butt
 
     #Make the graph look nice
     current_fig.update_layout(
-        title_text="Compounded Inflation Rate",
+        title_text="Compound Inflation Rate",
         title_font=dict(
             family="Courier New, monospace",
             size=24,
