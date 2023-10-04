@@ -185,7 +185,7 @@ def combined_update(start_year, end_year, data_source, storage_data, legend_butt
         title_font=dict(
             family="Courier New, monospace",
             size=24,
-            color="#635DFF"  # A more vibrant purple
+            color="#635DFF"
         ),
         xaxis=dict(
             title_text="Year",
