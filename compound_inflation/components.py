@@ -62,8 +62,7 @@ about_section = html.Div(
                     [
                         html.I(className="fas fa-database"),  # Icon
                         " Category: ",
-                        html.Span("Select a category to view. "),
-                        html.Small(
+                        html.Span("Select a category to view. "
                             "Note: Data starts from different years for each category. "
                             "All data is sourced from the U.S. Labor Department’s Bureau of Labor Statistics as reported by "
                         ),
