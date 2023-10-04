@@ -29,10 +29,6 @@ def update_storage(submit_n_clicks, reset_n_clicks, input_value, storage_data):
     else:
         button_id = ctx.triggered[0]['prop_id'].split('.')[0]
 
-    # Initialize storage_data if it's None or not a dict
-    if storage_data is None or not isinstance(storage_data, dict):
-        storage_data = {'reset': False, 'data': []}
-
     data = storage_data.get('data', [])
 
     # Reset button causes only the 1 year inflation rate to be displayed
@@ -113,6 +109,7 @@ def combined_update(start_year, end_year, data_source, storage_data, legend_butt
     
     ctx = dash.callback_context
 
+    # Initialize fig
     if current_fig is None or not isinstance(current_fig, Figure):
         current_fig = go.Figure(current_fig)
 
@@ -135,8 +132,7 @@ def combined_update(start_year, end_year, data_source, storage_data, legend_butt
     #Create snapshot of currently selected data source
     df_filtered = df.copy()
     # Apply date filter
-    df_filtered = df[(df.index.year >= start_year) & (df
-                                                      .index.year <= end_year)]
+    df_filtered = df[(df.index.year >= start_year) & (df.index.year <= end_year)]
 
     # Generate colors
     colors = get_distinct_colors(len(data))
@@ -189,37 +185,43 @@ def combined_update(start_year, end_year, data_source, storage_data, legend_butt
         title_font=dict(
             family="Courier New, monospace",
             size=24,
-            color="RebeccaPurple"
+            color="#635DFF"  # A more vibrant purple
         ),
         xaxis=dict(
             title_text="Year",
             title_font=dict(
                 family="Arial, sans-serif",
                 size=18,
-                color="Grey"
-                )
+                color="DarkSlateGray"
             ),
+            showgrid=True,
+            gridcolor='LightGray',
+            gridwidth=0.5,
+            zerolinecolor='LightGray',
+            zerolinewidth=0.5
+        ),
         yaxis=dict(
-            title_text="Inflation Rate",
+            title_text="Inflation Rate (%)",
             title_font=dict(
                 family="Times New Roman, Times, serif",
                 size=18,
-                color="Grey"
-                )
+                color="DarkSlateGray"
             ),
-        xaxis_showgrid=True,
-        yaxis_showgrid=True,
-        xaxis_gridcolor='gray',
-        yaxis_gridcolor='gray',
-        plot_bgcolor='#f8f8f8',
-        paper_bgcolor='#f8f8f8'
+            showgrid=True,
+            gridcolor='LightGray',
+            gridwidth=0.5,
+            zerolinecolor='LightGray',
+            zerolinewidth=0.5
+        ),
+        plot_bgcolor='#FAFAFA',
+        paper_bgcolor='#FAFAFA',
+        showlegend=False
     )
+    
     current_fig.update_yaxes(
         zerolinecolor='black'
         )
-    current_fig.update_layout(
-        showlegend=False
-        )
+        
     return [current_fig, visibility_data]  # Return the new figure and the unchanged visibility data
 
 #Handles the legend and its special functionality
@@ -308,3 +310,4 @@ def update_download_link(start_year, end_year, data_source, current_fig, visibil
     csv_data_uri = f"data:text/csv;charset=utf-8,{urllib.parse.quote(csv_string)}"
     
     return csv_data_uri
+
