@@ -10,7 +10,7 @@ app = dash.Dash(__name__)
 server=app.server
 app.config.suppress_callback_exceptions = True
 #Controls what ends up in the tab bar
-app.title = "Inflation Calculation"
+app.title = "Compound Inflation"
 
 app.layout = dbc.Container(
     [
