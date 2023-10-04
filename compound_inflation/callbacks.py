@@ -310,4 +310,3 @@ def update_download_link(start_year, end_year, data_source, current_fig, visibil
     csv_data_uri = f"data:text/csv;charset=utf-8,{urllib.parse.quote(csv_string)}"
     
     return csv_data_uri
-
