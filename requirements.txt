@@ -1,5 +1,6 @@
 dash==2.11.1
 dash_bootstrap_components==1.5.0
+gunicorn==21.2.0
 lxml==4.7.1
 numpy==1.22.1
 pandas==1.4.0
