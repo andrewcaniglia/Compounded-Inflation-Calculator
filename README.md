@@ -10,7 +10,7 @@ Run locally:
 ```
 git clone https://github.com/andrewcaniglia/Compounded-Inflation-Calculator.git
 cd Compounded-Inflation-Calculator
-pip install requirements.txt
+pip install -r requirements.txt
 cd compound_inflation
 gunicorn main:server
 ```
