@@ -49,10 +49,11 @@ about_section = html.Div(
         
         #Main description
         html.P(
-            "Every month, the U.S. Labor Department's Buraeu of Labor Statistics releases the current year over year and month over month inflation rate. "
+            "Every month, the U.S. Labor Department's Bureau of Labor Statistics releases the current year over year and month over month inflation rate. "
             "However, these intervals do not convey how much prices have increased over time intervals that may be more relevant to the average consumer. "
-            "Calculate inflation rates over longer time frames and visualize them on this interactive time-series chart. "
-            "Hover over the graph lines to see precise values."
+            "Visualize inflation rates over longer time frames with this interactive time-series chart. "
+            "Hover over the graph lines to see precise values. "
+            "Values are calculated by compounding the YoY US CPI inflation rates of multiple years."
         ),
         
         #Describes data source dropdown
@@ -64,7 +65,7 @@ about_section = html.Div(
                         " Category: ",
                         html.Span("Select a category to view. "),
                         html.Small(
-                            "Note: Data starts from different years for each category. "
+                            "Note: Different categories start from different years. "
                             "All data is sourced from the U.S. Labor Department’s Bureau of Labor Statistics as reported by "
                         ),
                         html.A(
@@ -80,7 +81,7 @@ about_section = html.Div(
                     [
                         html.I(className="fas fa-calendar-alt"),  # Icon
                         "Range: ",
-                        html.Span("Set the time period you're interested in.")
+                        html.Span("Input the year range to focus on.")
                     ]
                 ),
                 
@@ -88,11 +89,12 @@ about_section = html.Div(
                 html.Li(
                     [
                         html.I(className="fas fa-clock"),  # Icon
-                        "Input Time Frame: ",
-                        html.Span("Input the number of years with which to calculate compounded inflation. "),
+                        "Input Time Scale: ",
+                        html.Span("Compound the YoY inflation rates of these many years. "),
                         html.Small(
                             "For example, "
-                            "input '5' to calculate the amount of inflation that took place over a 5 year time span."
+                            "input '5' to compound the YoY inflation rates of the previous 5 years. "
+                            "This is a rough measure of how much prices increased during those 5 years."
                         )
                     ]
                 ),
@@ -103,7 +105,7 @@ about_section = html.Div(
                         html.I(className="fas fa-plus-circle"),  # Icon
                         " Add Line: ",
                         html.Span(
-                            "Integrate the compounded inflation rate into the graph. "
+                            "Add the compounded inflation rate to the graph. "
                             "This also adds an interactive legend item that hides the line when clicked."
                         )
                     ]
