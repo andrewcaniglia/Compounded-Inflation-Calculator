@@ -81,7 +81,7 @@ about_section = html.Div(
                     [
                         html.I(className="fas fa-calendar-alt"),  # Icon
                         "Range: ",
-                        html.Span("Input the year range to focus on.")
+                        html.Span("Input a year range to focus on.")
                     ]
                 ),
                 
