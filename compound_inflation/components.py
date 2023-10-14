@@ -90,10 +90,10 @@ about_section = html.Div(
                     [
                         html.I(className="fas fa-clock"),  # Icon
                         "Input Time Scale: ",
-                        html.Span("Compound the YoY inflation rates of these many years. "),
+                        html.Span("Compound the YoY inflation rates of this many years. "),
                         html.Small(
                             "For example, "
-                            "input '5' to compound the YoY inflation rates of the previous 5 years. "
+                            "input '5' to compound the previous 5 years' YoY inflation rates of the same month. "
                             "This is a rough measure of how much prices increased during those 5 years."
                         )
                     ]
@@ -302,31 +302,31 @@ control_center = html.Div(
 descriptions = [
     {
         "Category": "Headline CPI",
-        "Description": "Encompasses all goods and services in an economy."
+        "Description": "Includes all goods and services in an economy."
     },
     {
         "Category": "Core CPI",
-        "Description": "Excludes volatile items such as food and energy prices."
+        "Description": "Excludes volatile items such as food and energy."
     },
     {
         "Category": "Food",
-        "Description": "Measures the change in prices of food items, both at home and away from home."
+        "Description": "Measures the change in prices of food, both at home and away."
     },
     {
         "Category": "Grocery",
-        "Description": "Focuses on food items bought at grocery stores for consumption at home."
+        "Description": "Focuses on food bought at grocery stores for consumption at home."
     },
     {
         "Category": "Energy",
-        "Description": "Captures price changes in energy commodities, including gasoline, natural gas, and electricity."
+        "Description": "Captures price changes in energy, including gasoline, natural gas, and electricity."
     },
     {
         "Category": "Gasoline",
-        "Description": "Looks solely at gasoline prices."
+        "Description": "Looks only at gasoline prices."
     },
     {
         "Category": "Airline",
-        "Description": "Reflects changes in the prices of airline tickets."
+        "Description": "Measures change in the prices of airline tickets."
     },
     {
         "Category": "College",
