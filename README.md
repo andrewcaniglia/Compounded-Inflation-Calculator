@@ -1,9 +1,8 @@
-# Compounded-Inflation-Calculator
-<img width="1638" alt="Screen Shot 2023-10-06 at 12 48 46 AM" src="https://github.com/andrewcaniglia/Compounded-Inflation-Calculator/assets/81664882/d9313285-fb19-4a11-bf78-98834078fc7f">
+![compoundinflation](https://github.com/andrewcaniglia/Compounded-Inflation-Calculator/assets/81664882/1431e623-526d-4841-89ac-17b546ade0f9)
 
 Calculate compounded (aka integrated, cumulative, etc) inflation rates and graph them on a time-series chart. Move your cursor on the line to see its exact value.
 
-Powers https://compoundinflation.org
+App that powers https://compoundinflation.org
 
 Run locally:
 
