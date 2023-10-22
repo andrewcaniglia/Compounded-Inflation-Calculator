@@ -104,8 +104,8 @@ about_section = html.Div(
                     [
                         html.I(className="fas fa-plus-circle"),  # Icon
                         " Add Line: ",
-                        html.Span(
-                            "Add the compounded inflation rate to the graph. "
+                        html.Span("Add the compounded inflation rate to the graph. "),
+                        html.Small(
                             "This also adds an interactive legend item that hides the line when clicked."
                         )
                     ]
@@ -116,7 +116,7 @@ about_section = html.Div(
                     [
                         html.I(className="fas fa-undo"),  # Icon
                         " Reset: ",
-                        html.Span("Clears all lines except for the 1 Year inflation rate.")
+                        html.Span("Clears all lines except for the 1 Year (YoY) inflation rate.")
                     ]
                 )
             ]
