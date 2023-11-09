@@ -8,7 +8,7 @@ from dash import dash_table
 from load_tables import data_sources
 
 #Used to input desired cumulative interest rate
-input_box = dcc.Input(id='input-box', type='number', placeholder='Input Time Frame', n_blur=0)
+input_box = dcc.Input(id='input-box', type='number', placeholder='Input Time Scale', n_blur=0)
 
 #Eliminates all added cumulative rates
 reset_button = html.Button('Reset', id='reset-button')
